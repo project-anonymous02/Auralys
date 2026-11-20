@@ -1,0 +1,23 @@
+name: Import reverse-engineering archive
+on:
+  push:
+    paths:
+      - ".github/workflows/import-archive.yml"
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and verify archive
+        run: |
+          curl -fL "https://backend.composio.dev/api/v3/sl/CJ9yxmCB9d" -o Auralys-4.1.0-reverse-engineered.zip
+          echo "209d971675ad62646fb5870c5975f177ce47eaf225121fa67fb84190e1464ff1  Auralys-4.1.0-reverse-engineered.zip" | sha256sum -c -
+      - name: Commit archive
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Auralys-4.1.0-reverse-engineered.zip
+          git commit -m "Add Auralys 4.1.0 reverse-engineering archive"
+          git push
